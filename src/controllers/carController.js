@@ -14,7 +14,7 @@ exports.getAllCars = async (req, res) => {
 exports.bookCar = async (req, res) => {
     try {
         const { carId } = req.params;
-        const { bookedBy } = req.body;
+        const { bookedBy, returnDate, totalPrice } = req.body;
 
         const car = await Car.findById(carId);
         
@@ -29,7 +29,9 @@ exports.bookCar = async (req, res) => {
         car.isBooked = true;
         car.bookingDetails = {
             bookedBy,
-            bookingDate: new Date()
+            bookingDate: new Date(),
+            returnDate: new Date(returnDate),
+            totalPrice
         };
 
         await car.save();
@@ -45,6 +47,16 @@ exports.addCar = async (req, res) => {
         const car = new Car(req.body);
         const newCar = await car.save();
         res.status(201).json(newCar);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+// Add multiple cars (for testing/initial setup)
+exports.addMultipleCars = async (req, res) => {
+    try {
+        const cars = await Car.insertMany(req.body);
+        res.status(201).json(cars);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
