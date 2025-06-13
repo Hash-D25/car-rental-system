@@ -5,14 +5,14 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const MONGODB_URI = process.env.DATABASE_LOCAL || 'mongodb://localhost:27017/car-rental-system';
+const DB_URI = process.env.DATABASE || process.env.DATABASE_LOCAL || 'mongodb://localhost:27017/car-rental-system';
 
 // Middleware
 app.use(express.json());
 app.use(express.static('public'));
 
 // Database connection
-mongoose.connect(MONGODB_URI)
+mongoose.connect(DB_URI)
     .then(() => console.log('MongoDB connected successfully'))
     .catch(err => {
         console.error('MongoDB connection error:', err);
